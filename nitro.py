@@ -5,16 +5,10 @@ import requests
 import string
 import os
 from configparser import ConfigParser
+import time
 
 init(convert=True)
-proxies = open("./proxies.txt").read().splitlines()
-print(f'{Fore.YELLOW}[INFO]{Fore.RESET} Scraping proxies...')
-f = open("./proxies.txt", "a+")
-r = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=5000")
-for proxy in r.text.split("\n"):
-    proxy = proxy.strip()
-    if proxy:
-        f.write(str(proxy)+"\n")
+
 
 def webhook_tester():
     embed = {
@@ -58,30 +52,25 @@ def valid_nitro():
             }
         ]
     }
-    requests.post(webhook, json=embed)
+    requests.post(webhook2, json=embed)
 
 def invalid_nitro():
     embed = {
         "avatar_url": f"https://cdn.tech-latest.com/wp-content/uploads/2022/01/Discord-Nitro-vs-Nitro-Classic.jpeg",
         "username": "nitro generator + checker",
-        "content": "",
-        "embeds": [
-            {
-                "author": {
-                    "name": "nitro generator + checker",
-                    "url": "",
-                    "icon_url": f"https://cdn.tech-latest.com/wp-content/uploads/2022/01/Discord-Nitro-vs-Nitro-Classic.jpeg"
-                },
-                "description": f"Invalid nitro code:\ndiscord.gift/{nitro_code}",
-                "color": 0x000000,
-                "footer": {
-                    "text": "Made by github.com/z6o"
-                }
-            }
-        ]
+        "content": f"discord.gift/{nitro_code}",
+        
     }
-    requests.post(webhook2, json=embed)
+    requests.post(webhook, json=embed)
 
+proxies = open("./proxies.txt").read().splitlines()
+print(f'{Fore.YELLOW}[INFO]{Fore.RESET} Scraping proxies...')
+f = open("./proxies.txt", "a+")
+r = requests.get("https://api.proxyscrape.com/?request=displayproxies&proxytype=http&timeout=5000")
+for proxy in r.text.split("\n"):
+    proxy = proxy.strip()
+    if proxy:
+        f.write(str(proxy)+"\n")
 os.system('cls||clear')
 logo = f'''{Fore.BLUE}
        .__  __                 
@@ -91,8 +80,6 @@ logo = f'''{Fore.BLUE}
 |___|  /__||__|  |__|   \____/ 
      \/                        
 {Fore.RESET}
-
-
 '''
 print(f'{Back.YELLOW}[INFO]{Back.RESET}{Fore.CYAN} Reading config file...{Fore.RESET}\n')
 file = 'config.ini'
@@ -100,6 +87,7 @@ config = ConfigParser()
 config.read(file)
 webhook = config['webhook']['webhook_url']
 webhook2 = config['webhook']['webhook_for_invalid_codes']
+invaled_codes = config['webhook']['invalid_codes']
 hits = config['hits-file']['hits_file']
 print(f'{Back.GREEN}[SUCCESS]{Back.RESET}{Fore.CYAN} Readed config file.{Fore.RESET}\n')
 print(f'{Back.GREEN}[SUCCESS]{Back.RESET}{Fore.CYAN} Founded a webhook.{Fore.RESET}\n')
@@ -121,7 +109,7 @@ if answer == "2":
                 file.write(nitro_code)
         else:
             print(f"{Fore.RED}[INVALID] discord.gift/{nitro_code}")
-            invalid_nitro()
+            
 if answer == "1":
     while True:
         nitro_code = ('').join(random.choices(string.ascii_letters + string.digits, k=16))
@@ -134,6 +122,9 @@ if answer == "1":
                 file.write(nitro_code)
         else:
             print(f"{Fore.RED}[INVALID] discord.gift/{nitro_code} {Fore.RESET}")
-            invalid_nitro()
+            if invalid_codes == "True":
+                invalid_nitro()
+            
+                
 
        
