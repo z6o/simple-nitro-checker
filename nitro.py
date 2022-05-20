@@ -61,7 +61,7 @@ def invalid_nitro():
         "content": f"discord.gift/{nitro_code}",
         
     }
-    requests.post(webhook, json=embed)
+    requests.post(webhook2, json=embed)
 
 proxies = open("./proxies.txt").read().splitlines()
 print(f'{Fore.YELLOW}[INFO]{Fore.RESET} Scraping proxies...')
@@ -87,7 +87,7 @@ config = ConfigParser()
 config.read(file)
 webhook = config['webhook']['webhook_url']
 webhook2 = config['webhook']['webhook_for_invalid_codes']
-invaled_codes = config['webhook']['invalid_codes']
+invalid_codes = config['webhook']['invalid_codes']
 hits = config['hits-file']['hits_file']
 print(f'{Back.GREEN}[SUCCESS]{Back.RESET}{Fore.CYAN} Readed config file.{Fore.RESET}\n')
 print(f'{Back.GREEN}[SUCCESS]{Back.RESET}{Fore.CYAN} Founded a webhook.{Fore.RESET}\n')
